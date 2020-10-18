@@ -4,6 +4,8 @@ const app = express();
 const cors = require("cors");
 
 const movieSearchRouter = require("./routers/movieSearchRouter");
+const memberhRouter = require("./routers/memberRouter");
+
 const corsOptions = {
   origin: true,
   credentials: true,
@@ -15,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/movieSearch", movieSearchRouter);
+app.use("/member", memberhRouter);
 
 app.listen(7777, () => {
   console.log("server ready..");
