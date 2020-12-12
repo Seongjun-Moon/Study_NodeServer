@@ -2,13 +2,9 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
-const mysql = require("mysql");
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "user",
-  password: "1234",
-  database: "node",
-});
+const mysql = require("../../config/database.js");
+const con = mysql.init();
+mysql.connect(con);
 
 router.post("/search", function (req, res, next) {
   const url2 = "http://www.cgv.co.kr/movies";
@@ -74,23 +70,23 @@ router.post("/search", function (req, res, next) {
     //   console.log(i);
     // }
     axios
-      .post("http://localhost:7777/movieSearch/movie_search", send_param)
+      .post("http://localhost:7777/movie/movieSearch", send_param)
       .then((res) => {
-        console.log(res.data.result);
-        if (res.data.result.length != 0) {
-          console.log("이미 존재하는 영화");
+        //console.log(res.data.result);
+        if (res.data.result == null) {
+          // axios.post(
+          //   "http://localhost:7777/movieSearch/movieInsert",
+          //   send_param
+          // );
         } else {
-          axios.post(
-            "http://localhost:7777/movieSearch/movie_insert",
-            send_param
-          );
+          console.log("이미 존재하는 영화");
         }
       });
-
     return res.json({ img_data, movie_data, movie });
   });
 });
-router.post("/movie_search", (req, res) => {
+
+router.post("/movieSearch", (req, res) => {
   const movie_nm = req.body.movie_name;
   var sql = "select * from movie_info where movie_nm = ?";
   con.query(sql, [movie_nm], function (err, result) {
@@ -104,7 +100,7 @@ router.post("/movie_search", (req, res) => {
   });
 });
 
-router.post("/movie_insert", (req, res) => {
+router.post("/movieInsert", (req, res) => {
   const movie_nm = req.body.movie_name;
   // const movie_url = req.body.movie_url;
   var sql = "insert into movie_info(movie_nm) values (?)";

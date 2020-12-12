@@ -3,8 +3,9 @@ const path = require("path");
 const app = express();
 const cors = require("cors");
 
-const movieSearchRouter = require("./routers/movieSearchRouter");
-const memberhRouter = require("./routers/memberRouter");
+const movieSearchRouter = require("./routers/movie/movieRouter");
+const memberJoinRouter = require("./routers/member/memberJoinRouter");
+const memberLoginRouter = require("./routers/member/memberLoginRouter");
 
 const corsOptions = {
   origin: true,
@@ -16,8 +17,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/movieSearch", movieSearchRouter);
-app.use("/member", memberhRouter);
+app.use("/movie", movieSearchRouter);
+app.use("/member", memberLoginRouter);
+app.use("/member", memberJoinRouter);
 
 app.listen(7777, () => {
   console.log("server ready..");
